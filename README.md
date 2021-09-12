@@ -22,4 +22,4 @@ a snake game created using python
 ## **Authors**
 - **Jordan Fun** - [JordanFun](https://github.com/JordanFun)
 - **Clement To** - [glem-toe](https://github.com/glem-toe)
-- **Raymond Zou** - [RaymoZoo](https://github.com/raymozou)
+- **Raymond Zou** - [RaymoZou](https://github.com/raymozou)
