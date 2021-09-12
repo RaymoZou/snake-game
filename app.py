@@ -152,10 +152,16 @@ class Fruit:
 
         self.x = random.randrange(0, tile_number - 1) 
         self.y = random.randrange(0, tile_number - 1)
-        self.pos = Vector2(self.x * tile_size, self.y * tile_size) 
 
-        fruitNum = random.randrange(0, 4)
-        self.image = fruits[fruitNum]
+        if Vector2(self.x, self.y) in snake.body:
+            #print("Rerolling")
+            self.respawn()
+        else:
+            self.pos = Vector2(self.x * tile_size, self.y * tile_size) 
+
+            fruitNum = random.randrange(0, 4)
+            self.image = fruits[fruitNum]
+        
 
 def newGame(fruit, snake):
     global gameIsOver
