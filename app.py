@@ -3,29 +3,32 @@ import pygame
 import random
 from pygame.math import Vector2
 
-randomNum = random.randrange(0, 10)
+# global isRunning
 isRunning = True
+gameIsOver = False
 
 def check_next_tile(snake, fruit):
+    global gameIsOver
     next_tile = snake.body[0] + snake.direction
     print(next_tile)
     
     # check wall
     if next_tile.x < 0 or next_tile.y < 0 or next_tile.x >= tile_number or next_tile.y >= tile_number:
-        isRunning = False
+        gameIsOver = True
         print("Hit wall, restart")
+        print(gameIsOver)
+
+    # check body
+    for v in snake.body:
+        if v == next_tile:
+            print("Hit body, restart")
+            gameIsOver = True
 
     # check fruit
     if next_tile == Vector2(fruit.x, fruit.y):
         snake.eat_fruit()
         print("Fruit eaten")
         fruit.respawn()
-
-    # check body
-    for v in snake.body:
-        if v == next_tile:
-            isRunning = False
-            print("Hit body, restart")
 
 class Snake:
     def __init__(self):
@@ -53,8 +56,11 @@ class Snake:
 
     def eat_fruit(self):
         self.fruit_eaten += 1
-        
-        
+
+    def respawn(self):
+        self.body = [Vector2(6, 10), Vector2(5, 10), Vector2(4, 10)]
+        self.direction = Vector2(1, 0)
+        self.fruit_eaten = 0
 
 class Fruit:
    def __init__(self):
@@ -72,7 +78,18 @@ class Fruit:
         self.pos = Vector2(self.x * tile_size, self.y * tile_size) 
 
 
+def newGame(fruit, snake):
+    global gameIsOver
+    fruit.respawn()
+    snake.respawn()
+    gameIsOver = False
+
 pygame.init()
+pygame.font.init()
+
+font = pygame.font.SysFont('Times New Roman', 30)
+
+restartText = font.render('Press "r" to restart the game', False, (0, 0, 0))
 
 
 tile_size = 50
@@ -89,7 +106,7 @@ fruit = Fruit()
 snake = Snake()
 
 # Updates the screen (moves snake) every update_timer milliseconds
-update_timer = 200
+update_timer = 150
 
 SCREEN_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(SCREEN_UPDATE, update_timer)
@@ -100,8 +117,10 @@ while isRunning:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if event.type == SCREEN_UPDATE:
+        if event.type == SCREEN_UPDATE and not gameIsOver:
             check_next_tile(snake, fruit)
+            # if gameIsOver:
+            #     screen.blit(restartText, (tile_number * tile_size / 2, tile_number * tile_size / 2))
             snake.move_snake()
         if event.type == pygame.KEYDOWN:
             if (event.key == pygame.K_DOWN) and (snake.direction != Vector2(0, -1)):
@@ -112,6 +131,10 @@ while isRunning:
                 snake.direction = Vector2(1, 0)
             if (event.key == pygame.K_LEFT) and (snake.direction != Vector2(1, 0)):
                 snake.direction = Vector2(-1, 0)
+            if (event.key == pygame.K_r) and gameIsOver:
+                print('r pressed')
+                newGame(fruit, snake)
+
             
     # Checker the board
     screen.fill((78, 168, 50))
@@ -131,3 +154,4 @@ while isRunning:
     snake.draw_snake()
     pygame.display.update()
     clock.tick(60)
+
