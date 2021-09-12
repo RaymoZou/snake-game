@@ -4,6 +4,7 @@ a snake game created using python
 # MODULES USED FOR THIS GAME
 
 - pygame
+- pyinstaller
 
 # INSTRUCTIONS
 
