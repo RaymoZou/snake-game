@@ -5,7 +5,8 @@ a snake game created using python
 
 - pygame
 
-# NOTES
+# INSTRUCTIONS
 
+- Use arrow keys to move
 - press 'R' to restart when the game is over
 
